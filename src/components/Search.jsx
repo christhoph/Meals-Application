@@ -1,29 +1,31 @@
 import { useState } from "react";
-import { useGlobalContext } from "../context";
 
-const Search = () => {
+import { allMealsUrl } from "../constants";
+
+// Recibo las 2 funciones a ejecutar por props
+const Search = ({ fetchMeals, fetchRandomMeal }) => {
   const [text, setText] = useState("");
-  const { setSearchTerm, fetchRandomMeal } = useGlobalContext();
 
   const handleChange = (e) => {
     setText(e.target.value);
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (text) {
-      setSearchTerm(text);
-      setText("");
-    }
+
+  // Al dar click en el boton de buscar obtiene el texto ingresado y lo pasa a la funcion fetchMeals
+  const onSearch = () => {
+    fetchMeals(`${allMealsUrl}${text}`);
+    setText("");
   };
+
   const handleRandomMeal = () => {
-    setSearchTerm("");
     setText("");
     fetchRandomMeal();
   };
 
+  // No me gusta mucho usar el tag form en React, no se aprovecha mucho sus beneficios
+  // Prefiero que el input o los botones ejecuten la logica que deban independientemente
   return (
     <header className="header search-container">
-      <form onSubmit={handleSubmit}>
+      <div className="form-container">
         <input
           className="form-input"
           type="text"
@@ -31,17 +33,21 @@ const Search = () => {
           placeholder="type your favorite meal"
           onChange={handleChange}
         />
-        <button className="btn" type="submit">
+
+        <button className="btn" onClick={onSearch}>
           search
         </button>
+
         <button
           className="btn btn-hipster"
           type="button"
-          onClick={handleRandomMeal}>
+          onClick={handleRandomMeal}
+        >
           surprise me!
         </button>
-      </form>
+      </div>
     </header>
   );
 };
+
 export default Search;

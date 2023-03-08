@@ -1,41 +1,78 @@
-import { useGlobalContext } from "../context";
 import { useState } from "react";
-import { FaRegThumbsUp } from "react-icons/fa";
 
-const Meals = () => {
-  //passing the context to the component
-  const { meals, loading, selectMeal, addFavorites } = useGlobalContext();
+import Favorites from "./Favorites";
+import MealsList from "./MealsList";
+import Modal from "./Modal";
 
-  if (loading) {
-    return (
-      <section className="section">
-        <h4>Loading... </h4>
-      </section>
+const getFavoritesFromLocalStorage = () => {
+  const item = localStorage.getItem("favorites");
+
+  return !!item ? JSON.parse(item) : [];
+};
+
+// Recibo estos 2 valores por props aunque solo lo requiere el componente MealsList
+const Meals = ({ loading, meals }) => {
+  // Movi gran parte de la logica aqui
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [favorites, setFavorites] = useState(() =>
+    getFavoritesFromLocalStorage()
+  );
+
+  const onSelectMeal = (meal) => {
+    setShowModal(true);
+    setSelectedMeal(meal);
+  };
+
+  const onCloseModal = () => {
+    setShowModal(false);
+    setSelectedMeal(null);
+  };
+
+  const onSaveFavorites = (updatedFavorites = []) => {
+    setFavorites(updatedFavorites);
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+  };
+
+  const addFavorites = (favoriteMeal) => {
+    const alreadyFavorite = favorites.find(
+      (meal) => meal.idMeal === favoriteMeal.idMeal
     );
-  }
-  if (meals.length < 1)
-    return (
-      <h4 className="section">
-        No meals matched with your search. Please, try again
-      </h4>
-    );
+
+    if (alreadyFavorite) return;
+
+    const meal = meals.find((meal) => meal.idMeal === favoriteMeal.idMeal);
+
+    onSaveFavorites([...favorites, meal]);
+  };
+
+  const removeFromFavorites = (idMeal) => {
+    onSaveFavorites(favorites.filter((meal) => meal.idMeal !== idMeal));
+  };
+
+  // Movi los componentes Favorites y Modal a este componente para que puedan consumir los valores de favorites, selectedMeal y showModal
   return (
-    <section className="section-center">
-      {meals.map((meal) => {
-        const { idMeal, strMeal: title, strMealThumb: image } = meal;
-        return (
-          <article key={idMeal} className="single-meal">
-            <img src={image} className="img" onClick={() => {selectMeal(idMeal)}}/>
-            <footer>
-              <h5>{title}</h5>
-              <button className="like-btn" onClick={() => {addFavorites(idMeal)}} >
-                <FaRegThumbsUp />
-              </button>
-            </footer>
-          </article>
-        );
-      })}
-    </section>
+    <>
+      {favorites.length > 0 && (
+        <Favorites
+          favorites={favorites}
+          selectMeal={onSelectMeal}
+          removeFromFavorites={removeFromFavorites}
+        />
+      )}
+
+      <MealsList
+        meals={meals}
+        loading={loading}
+        onSelectMeal={onSelectMeal}
+        addFavorites={addFavorites}
+      />
+
+      {showModal && (
+        <Modal onClose={onCloseModal} selectedMeal={selectedMeal} />
+      )}
+    </>
   );
 };
+
 export default Meals;

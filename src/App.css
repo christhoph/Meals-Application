@@ -68,7 +68,7 @@ html {
 
 body {
   background: var(--backgroundColor);
-  font-family: system-ui, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, "Open Sans", "Helvetica Neue", sans-serif;
   line-height: 1.75;
   color: var(--textColor);
 }
@@ -167,7 +167,6 @@ ul {
   width: 100%;
 }
 
-
 /* Meals */
 .section,
 .section-center {
@@ -182,13 +181,13 @@ ul {
   gap: 2rem;
 }
 
-@media screen and (min-width:776px) {
+@media screen and (min-width: 776px) {
   .section-center {
     grid-template-columns: 1fr 1fr;
   }
 }
 
-@media screen and (min-width:992px) {
+@media screen and (min-width: 992px) {
   .section-center {
     grid-template-columns: 1fr 1fr 1fr;
   }
@@ -236,7 +235,7 @@ ul {
 
 .like-btn:hover {
   color: var(--red-dark);
-  transform: translateY(-2px)
+  transform: translateY(-2px);
 }
 
 /* Search */
@@ -249,7 +248,7 @@ ul {
   justify-content: center;
 }
 
-.search-container form {
+.search-container .form-container {
   width: var(--view-width);
   max-width: var(--max-width);
   display: flex;
@@ -321,7 +320,7 @@ ul {
 }
 
 .modal-content a:hover {
-  color: var(--black)
+  color: var(--black);
 }
 
 .close-btn {
@@ -342,18 +341,15 @@ ul {
   margin: 0 auto;
 }
 
-
 .favorites-container {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
 
-
 .favorite-item {
   text-align: center;
 }
-
 
 .favorites-img {
   width: 60px;
@@ -361,7 +357,6 @@ ul {
   border: 5px solid var(--white);
   cursor: pointer;
 }
-
 
 .remove-btn {
   margin-top: 0.25rem;
@@ -374,5 +369,5 @@ ul {
 }
 
 .remove-btn:hover {
-  color: var(--red-dark)
+  color: var(--red-dark);
 }
